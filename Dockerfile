@@ -20,5 +20,5 @@ COPY --from=builder /run-app /usr/local/bin/
 # Copy the static directory to the root
 COPY --from=builder /usr/src/app/frontend/static /frontend/static
 
-# run the app from the root folder (the command will follow executable path but static folder etc. should be at root folder)
+# run the app from the root folder (the command will follow executable path but static folder etc. should be at root folder because the command is run at root folder)
 CMD ["run-app"]
