@@ -11,9 +11,10 @@ Install nodejs (for Tailwind)
 
 Should create new:
 - fly.io project
-- Neon project
-- supabase project
-- cloudinary project
+- neon project --> to do
+- supabase project --> to do
+- cloudinary project --> to do
+- stripe?
 
 
 Should connect repository to your fly.io project
