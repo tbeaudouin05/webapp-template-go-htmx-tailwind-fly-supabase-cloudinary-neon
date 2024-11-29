@@ -6,6 +6,8 @@ import (
 	utilscmd "webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/cmd/utils_cmd"
 )
 
+// to improve: always set ShouldUseCdn to = no before
+
 func main() {
 	// Change the working directory to the project root
 	err := os.Chdir("../..") // Adjust the path if your structure is different

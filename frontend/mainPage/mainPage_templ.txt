@@ -1,9 +1,0 @@
-<div>Hello, 
-</div>
-<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"description\" content=\"AI-generated ETF investment allocation analysis for stock market investors.\"><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"
-\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"
-\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"
-\"><link rel=\"manifest\" href=\"
-\"><title>Gen AI Stock Market Analysis</title>
-<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"></head><body><div id=\"content\">
-</div><button hx-get=\"/update\" hx-target=\"#content\" hx-swap=\"innerHTML\">Update Greeting</button></body></html>
