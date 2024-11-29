@@ -1,0 +1,24 @@
+package loadHtmxAndTailwindScripts
+
+import (
+	"fmt"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/goConstants"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/goEnv"
+)
+
+// Once handle to ensure scripts load only once
+var scriptsHandle = templ.NewOnceHandle()
+
+// Component to load HTMX and Tailwind scripts based on environment
+templ LoadHtmxAndTailwindScripts(shouldUseCdn goEnv.ShouldUseCdn) {
+	@scriptsHandle.Once() {
+		if shouldUseCdn == goEnv.NoShouldNotUseCdn {
+			<!-- Load local resources in production -->
+			<link href={ fmt.Sprintf("/%s/tailwind_mini.css", goConstants.StaticFolder) } rel="stylesheet"/>
+		} else {
+			<!-- Load from CDN in development -->
+			<script src="https://cdn.tailwindcss.com"></script>
+		}
+		<script src="https://unpkg.com/htmx.org@2.0.2" defer></script>
+	}
+}
