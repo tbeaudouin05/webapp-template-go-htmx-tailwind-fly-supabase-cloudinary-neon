@@ -44,6 +44,8 @@ Create neon project here: https://console.neon.tech/app/projects
 
 get your database url here: https://console.neon.tech/app/projects/falling-fog-13122533/quickstart
 
+update NeonDatabaseUrl in .env file with your database url
+
 (rename env variable DATABASE_URL to NeonDatabaseUrl in .env file)
 
 ----
