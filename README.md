@@ -14,6 +14,11 @@ Should create new:
 - neon project --> to do
 - supabase project --> to do
 - cloudinary project --> to do
+- example complex form with https://github.com/Emtyloc/json-enc-custom/blob/main/README.md
+- example login email and google supabase
+- example verify logged in requests
+- example upload image cloudinary
+- example crude neon
 - stripe?
 
 
