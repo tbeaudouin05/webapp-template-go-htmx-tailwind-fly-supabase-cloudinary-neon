@@ -39,6 +39,15 @@ Example:
 
 Generally speaking, we only use camel case everywhere.
 
+----
+Create neon project here: https://console.neon.tech/app/projects
+
+get your database url here: https://console.neon.tech/app/projects/falling-fog-13122533/quickstart
+
+(rename env variable DATABASE_URL to NeonDatabaseUrl in .env file)
+
+----
+
 To add tailwind animations, use tailwind.config.js (ask chatgpt how to do this with tailwind.config.js) - animations will only be available if ShouldUseCdn = No
 
 Static files can be served from frontend/static/

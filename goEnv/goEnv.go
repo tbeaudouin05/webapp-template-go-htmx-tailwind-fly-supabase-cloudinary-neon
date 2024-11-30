@@ -3,14 +3,16 @@ package goEnv
 
 import (
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 )
 
 // EnvVar holds all environment variables required by the application.
 type EnvVar struct {
-	Env          Env
-	ShouldUseCdn ShouldUseCdn
+	Env             Env
+	ShouldUseCdn    ShouldUseCdn
+	NeonDatabaseUrl string
 }
 
 // GlobalEnvVar is the global instance holding all environment variables.
@@ -37,8 +39,9 @@ func GetEnvVar() error {
 
 	// Retrieve environment variables
 	envVars := EnvVar{
-		Env:          envType,
-		ShouldUseCdn: shouldUseCdn,
+		Env:             envType,
+		ShouldUseCdn:    shouldUseCdn,
+		NeonDatabaseUrl: os.Getenv("NeonDatabaseUrl"),
 	}
 
 	GlobalEnvVar = envVars
