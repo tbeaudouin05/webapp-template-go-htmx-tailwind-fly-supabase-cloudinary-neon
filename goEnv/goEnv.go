@@ -13,6 +13,7 @@ type EnvVar struct {
 	Env             Env
 	ShouldUseCdn    ShouldUseCdn
 	NeonDatabaseUrl string
+	ClerkSecretKey  string
 }
 
 // GlobalEnvVar is the global instance holding all environment variables.
@@ -42,6 +43,7 @@ func GetEnvVar() error {
 		Env:             envType,
 		ShouldUseCdn:    shouldUseCdn,
 		NeonDatabaseUrl: os.Getenv("NeonDatabaseUrl"),
+		ClerkSecretKey:  os.Getenv("ClerkSecretKey"),
 	}
 
 	GlobalEnvVar = envVars
