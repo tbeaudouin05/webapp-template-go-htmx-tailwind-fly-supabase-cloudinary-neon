@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/backend/neonDatabase/getNeonConnection"
@@ -15,32 +14,21 @@ import (
 	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/goConstants"
 	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/goEnv"
 
+	"github.com/clerk/clerk-sdk-go/v2"
+	"github.com/clerk/clerk-sdk-go/v2/jwt"
 	"github.com/gin-gonic/gin"
 )
 
-/*func SignUpUser(email, password string) error {
-	// Create a context
-	ctx := context.Background()
-
-	// Create a new user with the provided email and password
-	newUser, err := user.Create(ctx, &user.CreateParams{
-		EmailAddresses: &[]string{email},
-		Password:       clerk.String(password),
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create user: %v", err)
-	}
-
-	fmt.Printf("User created with ID: %s\n", newUser.ID)
-	return nil
-}*/
+const clerkSessionCookieName = "clerkSession"
+const clerkAPIBaseURL = "https://api.clerk.com/v1"
 
 func main() {
-
 	err := goEnv.GetEnvVar()
 	if err != nil {
 		log.Fatalf("Failed to load environment variables: %v", err)
 	}
+
+	clerk.SetKey(goEnv.GlobalEnvVar.ClerkSecretKey)
 
 	ctx := context.Background()
 
@@ -60,11 +48,11 @@ func main() {
 
 	// Serve the initial page
 	r.GET("/", func(c *gin.Context) {
-		cookie, err := c.Request.Cookie("clerkSession")
+		cookie, err := c.Cookie(clerkSessionCookieName)
 		if err != nil {
 			fmt.Println("No cookie found")
 		} else {
-			fmt.Printf("Cookie value: %s\n", cookie.Value)
+			fmt.Printf("Cookie value: %s\n", cookie)
 		}
 
 		c.Status(200)
@@ -88,38 +76,14 @@ func main() {
 	r.Run("0.0.0.0:8080")
 }
 
-func ClerkSessionMiddleware(c *gin.Context) {
-	// Check if the session cookie exists
-	sessionToken, err := c.Cookie("clerk_session")
-	if err != nil || sessionToken == "" {
-		// Proceed without session if not found
-		fmt.Println("No session token found in cookies")
-		c.Next()
-		return
-	}
-
-	// Store the session token in the context for later retrieval
-	c.Set("clerk_session", sessionToken)
-	c.Next()
-}
-
 func GetSessionToken(c *gin.Context) (string, error) {
-	// Attempt to retrieve the session token from the context
-	token, exists := c.Get("clerk_session")
-	if !exists {
-		return "", fmt.Errorf("session token not found in context")
+	// Attempt to retrieve the session token from the cookie
+	sessionToken, err := c.Cookie(clerkSessionCookieName)
+	if err != nil {
+		return "", fmt.Errorf("session token not found in cookies")
 	}
-
-	// Assert that the token is a string
-	sessionToken, ok := token.(string)
-	if !ok {
-		return "", fmt.Errorf("session token is not a valid string")
-	}
-
 	return sessionToken, nil
 }
-
-const clerkAPIBaseURL = "https://api.clerk.com/v1"
 
 func clerkAPIRequest(method, endpoint string, payload interface{}) (*http.Response, error) {
 	apiKey := goEnv.GlobalEnvVar.ClerkSecretKey
@@ -154,7 +118,7 @@ func clerkAPIRequest(method, endpoint string, payload interface{}) (*http.Respon
 		fmt.Printf("Response Status: %d\n", resp.StatusCode)
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		fmt.Printf("Response Body: %s\n", string(bodyBytes))
-		resp.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes)) // Reattach body for further use
+		resp.Body = io.NopCloser(bytes.NewBuffer(bodyBytes)) // Reattach body for further use
 	}
 
 	return resp, err
@@ -177,14 +141,14 @@ func SignUpHandler(c *gin.Context) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		bodyBytes, _ := io.ReadAll(resp.Body)
 		c.String(http.StatusUnauthorized, fmt.Sprintf("Sign up failed: %s", string(bodyBytes)))
 		return
 	}
 
 	// Parse the user_id from the response
 	var signupResponse struct {
-		UserID string `json:"id"`
+		ID string `json:"id"`
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&signupResponse); err != nil {
 		c.String(http.StatusInternalServerError, "Failed to parse sign-up response")
@@ -192,32 +156,55 @@ func SignUpHandler(c *gin.Context) {
 	}
 
 	// Automatically sign in the user
-	signIn(c, signupResponse.UserID)
+	signIn(c, signupResponse.ID)
 }
 
 func signIn(c *gin.Context, userID string) {
+	// Create a session
 	payload := map[string]string{
 		"user_id": userID,
 	}
 
 	resp, err := clerkAPIRequest("POST", "/sessions", payload)
 	if err != nil || resp.StatusCode != http.StatusOK {
-		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		bodyBytes, _ := io.ReadAll(resp.Body)
 		c.String(http.StatusUnauthorized, fmt.Sprintf("Failed to sign in: %s", string(bodyBytes)))
 		return
 	}
 	defer resp.Body.Close()
 
 	var sessionResponse struct {
-		SessionToken string `json:"session_token"`
+		ID string `json:"id"`
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&sessionResponse); err != nil {
 		c.String(http.StatusInternalServerError, "Failed to parse sign-in response")
 		return
 	}
 
+	sessionID := sessionResponse.ID
+
+	// Now, create a session token (JWT)
+	tokenResp, err := clerkAPIRequest("POST", fmt.Sprintf("/sessions/%s/tokens", sessionID), nil)
+	if err != nil || tokenResp.StatusCode != http.StatusOK {
+		bodyBytes, _ := io.ReadAll(tokenResp.Body)
+		c.String(http.StatusUnauthorized, fmt.Sprintf("Failed to create session token: %s", string(bodyBytes)))
+		return
+	}
+	defer tokenResp.Body.Close()
+
+	var tokenResponse struct {
+		Object string `json:"object"`
+		JWT    string `json:"jwt"`
+	}
+	if err := json.NewDecoder(tokenResp.Body).Decode(&tokenResponse); err != nil {
+		c.String(http.StatusInternalServerError, "Failed to parse session token response")
+		return
+	}
+
+	sessionToken := tokenResponse.JWT
+
 	// Set session cookie
-	c.SetCookie("clerk_session", sessionResponse.SessionToken, 3600, "/", "", false, true)
+	c.SetCookie(clerkSessionCookieName, sessionToken, 3600, "/", "", false, true)
 	c.String(http.StatusOK, "Sign-in successful")
 }
 
@@ -225,51 +212,75 @@ func SignInHandler(c *gin.Context) {
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 
-	// Fetch user_id using email and password
-	payload := map[string]string{
-		"email_address": email,
-		"password":      password,
-	}
-
-	resp, err := clerkAPIRequest("POST", "/users/password", payload)
-	if err != nil || resp.StatusCode != http.StatusOK {
-		bodyBytes, _ := ioutil.ReadAll(resp.Body)
-		c.String(http.StatusUnauthorized, fmt.Sprintf("Failed to fetch user: %s", string(bodyBytes)))
+	// Fetch user details using the email address
+	userListResp, err := clerkAPIRequest("GET", fmt.Sprintf("/users?email_address=%s", email), nil)
+	if err != nil || userListResp.StatusCode != http.StatusOK {
+		bodyBytes, _ := io.ReadAll(userListResp.Body)
+		println("Failed to fetch user by email:", err)
+		c.String(http.StatusUnauthorized, fmt.Sprintf("Failed to fetch user by email: %s", string(bodyBytes)))
 		return
 	}
-	defer resp.Body.Close()
+	defer userListResp.Body.Close()
 
-	var userResponse struct {
-		UserID string `json:"id"`
+	var userListResponse []struct {
+		ID string `json:"id"`
 	}
-	if err := json.NewDecoder(resp.Body).Decode(&userResponse); err != nil {
-		c.String(http.StatusInternalServerError, "Failed to parse user response")
+
+	if err := json.NewDecoder(userListResp.Body).Decode(&userListResponse); err != nil || len(userListResponse) == 0 {
+		fmt.Printf("Failed to parse user list response: %v", err)
+		c.String(http.StatusUnauthorized, "User not found")
 		return
 	}
 
-	// Use user_id to create a session
-	signIn(c, userResponse.UserID)
+	userID := userListResponse[0].ID
+	println("User ID:", userID)
+
+	// Verify the user's password
+	verifyPasswordPayload := map[string]string{
+		"password": password,
+	}
+	verifyResp, err := clerkAPIRequest("POST", fmt.Sprintf("/users/%s/verify_password", userID), verifyPasswordPayload)
+	if err != nil || verifyResp.StatusCode != http.StatusOK {
+		bodyBytes, _ := io.ReadAll(verifyResp.Body)
+		c.String(http.StatusUnauthorized, fmt.Sprintf("Password verification failed: %s", string(bodyBytes)))
+		return
+	}
+	defer verifyResp.Body.Close()
+
+	// Use user_id to create a session and get a session token
+	signIn(c, userID)
 }
 
 func SignOutHandler(c *gin.Context) {
-	// Retrieve the session token from the context
+	// Retrieve the session token from the cookie
 	sessionToken, err := GetSessionToken(c)
 	if err != nil || sessionToken == "" {
 		c.String(http.StatusUnauthorized, "No active session found")
 		return
 	}
 
+	// Verify the session token to get the claims
+	claims, err := jwt.Verify(c.Request.Context(), &jwt.VerifyParams{
+		Token: sessionToken,
+	})
+	if err != nil {
+		c.String(http.StatusUnauthorized, "Invalid session token")
+		return
+	}
+
+	sessionID := claims.Claims.SessionID
+
 	// Call Clerk API to revoke the session
-	resp, err := clerkAPIRequest("POST", "/sessions/"+sessionToken+"/revoke", nil)
+	resp, err := clerkAPIRequest("POST", fmt.Sprintf("/sessions/%s/revoke", sessionID), nil)
 	if err != nil || resp.StatusCode != http.StatusOK {
-		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		bodyBytes, _ := io.ReadAll(resp.Body)
 		c.String(http.StatusInternalServerError, fmt.Sprintf("Failed to sign out: %s", string(bodyBytes)))
 		return
 	}
 	defer resp.Body.Close()
 
 	// Clear the cookie
-	c.SetCookie("clerk_session", "", -1, "/", "", false, true)
+	c.SetCookie(clerkSessionCookieName, "", -1, "/", "", false, true)
 	c.String(http.StatusOK, "Sign-out successful")
 }
 
@@ -280,5 +291,15 @@ func ProtectedRoute(c *gin.Context) {
 		return
 	}
 
-	c.String(http.StatusOK, fmt.Sprintf("Your session token is: %s", sessionToken))
+	// Verify the session token
+	claims, err := jwt.Verify(c.Request.Context(), &jwt.VerifyParams{
+		Token: sessionToken,
+	})
+	if err != nil {
+		c.String(http.StatusUnauthorized, "Invalid session token")
+		return
+	}
+
+	userID := claims.Subject
+	c.String(http.StatusOK, fmt.Sprintf("Your user ID is: %s", userID))
 }
