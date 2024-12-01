@@ -1,0 +1,21 @@
+package headComponent
+
+import "webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/scripts/loadHtmxAndTailwindScripts"
+import "fmt"
+import "webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/goConstants"
+import "webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/goEnv"
+
+templ HeadComponent() {
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="description" content="AI-generated ETF investment allocation analysis for stock market investors."/>
+			<link rel="apple-touch-icon" sizes="180x180" href={ fmt.Sprintf("%s/favicon/apple-touch-icon.png", goConstants.StaticFolder) }/>
+			<link rel="icon" type="image/png" sizes="32x32" href={ fmt.Sprintf("%s/favicon/favicon-32x32.png", goConstants.StaticFolder) }/>
+			<link rel="icon" type="image/png" sizes="16x16" href={ fmt.Sprintf("%s/favicon/favicon-16x16.png", goConstants.StaticFolder) }/>
+			<link rel="manifest" href={ fmt.Sprintf("%s/favicon/site.webmanifest", goConstants.StaticFolder) }/>
+			<title>Gen AI Stock Market Analysis</title>
+			@loadHtmxAndTailwindScripts.LoadHtmxAndTailwindScripts(goEnv.GlobalEnvVar.ShouldUseCdn)
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		</head>
+
+}

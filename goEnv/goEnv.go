@@ -2,6 +2,7 @@
 package goEnv
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -13,7 +14,7 @@ type EnvVar struct {
 	Env             Env
 	ShouldUseCdn    ShouldUseCdn
 	NeonDatabaseUrl string
-	ClerkSecretKey  string
+	PassageAppId    string
 }
 
 // GlobalEnvVar is the global instance holding all environment variables.
@@ -43,7 +44,14 @@ func GetEnvVar() error {
 		Env:             envType,
 		ShouldUseCdn:    shouldUseCdn,
 		NeonDatabaseUrl: os.Getenv("NeonDatabaseUrl"),
-		ClerkSecretKey:  os.Getenv("ClerkSecretKey"),
+		PassageAppId:    os.Getenv("PassageAppId"),
+	}
+
+	if envVars.NeonDatabaseUrl == "" {
+		return fmt.Errorf("NeonDatabaseUrl environment variable is not set")
+	}
+	if envVars.PassageAppId == "" {
+		return fmt.Errorf("PassageAppId environment variable is not set")
 	}
 
 	GlobalEnvVar = envVars

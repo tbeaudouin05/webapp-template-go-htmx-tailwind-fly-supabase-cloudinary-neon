@@ -1,4 +1,0 @@
-<!-- Load local resources in production --> <link href=\"
-\" rel=\"stylesheet\">
-<!-- Load from CDN in development --> <script src=\"https://cdn.tailwindcss.com\"></script>
- <script src=\"https://unpkg.com/htmx.org@2.0.2\" defer></script>

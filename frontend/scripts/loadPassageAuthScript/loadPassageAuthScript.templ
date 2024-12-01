@@ -1,0 +1,11 @@
+package loadPassageAuthScript
+
+// Once handle to ensure scripts load only once
+var scriptsHandle = templ.NewOnceHandle()
+
+// Component to load HTMX and Tailwind scripts based on environment
+templ LoadPassageAuthScript() {
+	@scriptsHandle.Once() {
+		<script src="https://psg.so/web.js"></script>
+	}
+}

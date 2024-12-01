@@ -1,0 +1,22 @@
+package mainPage
+
+import "webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/headComponent"
+
+templ Hello(name string) {
+	<div>Hello, { name }</div>
+}
+
+templ Page() {
+	<!DOCTYPE html>
+	<html lang="en">
+		@headComponent.HeadComponent()
+		<body>
+			<div id="content">
+				@Hello("World")
+			</div>
+			<button hx-get="/update" hx-target="#content" hx-swap="innerHTML">
+				Update Greeting
+			</button>
+		</body>
+	</html>
+}

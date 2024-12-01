@@ -1,0 +1,23 @@
+package logOutPage
+
+import (
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/headComponent"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/scripts/loadPassageJsScript"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/goEnv"
+)
+
+templ LogOutPage() {
+	<!DOCTYPE html>
+	<html lang="en">
+		@headComponent.HeadComponent()
+		@loadPassageJsScript.LoadPassageJsScript(goEnv.GlobalEnvVar.PassageAppId)
+		<body>
+			<button
+				id="logoutButton"
+				class="bg-black text-white font-bold py-2 px-4 rounded"
+			>
+				Log out
+			</button>
+		</body>
+	</html>
+}

@@ -1,0 +1,28 @@
+
+package loadPassageJsScript
+
+// Once handle to ensure scripts load only once
+var scriptsHandle = templ.NewOnceHandle()
+
+// Component to load HTMX and Tailwind scripts based on environment
+templ LoadPassageJsScript(passageAppId string) {
+	@scriptsHandle.Once() {
+		<script type="module">
+            import { Passage } from 'https://cdn.passage.id/passage-js/v4.x/passage-js.js';
+
+            const passage = new Passage("s6hTlYa0eOxXYDktgNQMakUb");
+
+            async function passageLogOut() {
+                try {
+                    await passage.currentUser.logOut();
+                    console.log("Successfully logged out");
+                } catch (error) {
+                    console.error("Error during logout:", error);
+                }
+            }
+
+            // Add event listener
+            document.getElementById("logoutButton").addEventListener("click", passageLogOut);
+        </script>
+	}
+}

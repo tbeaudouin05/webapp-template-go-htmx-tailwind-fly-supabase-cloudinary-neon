@@ -1,0 +1,18 @@
+package passageAuthPage
+
+import (
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/headComponent"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/scripts/loadPassageAuthScript"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/goEnv"
+)
+
+templ PassageAuthPage() {
+	<!DOCTYPE html>
+	<html lang="en">
+		@headComponent.HeadComponent()
+		@loadPassageAuthScript.LoadPassageAuthScript()
+		<body>
+			<passage-auth app-id={ goEnv.GlobalEnvVar.PassageAppId }></passage-auth>
+		</body>
+	</html>
+}

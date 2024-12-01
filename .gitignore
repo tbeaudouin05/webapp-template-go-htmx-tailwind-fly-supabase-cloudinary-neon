@@ -1,6 +1,9 @@
 
 gemini-key.json
 
+*_templ.go
+*_templ.txt
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
