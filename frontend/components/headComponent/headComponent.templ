@@ -13,9 +13,10 @@ templ HeadComponent() {
 			<link rel="icon" type="image/png" sizes="32x32" href={ fmt.Sprintf("%s/favicon/favicon-32x32.png", goConstants.StaticFolder) }/>
 			<link rel="icon" type="image/png" sizes="16x16" href={ fmt.Sprintf("%s/favicon/favicon-16x16.png", goConstants.StaticFolder) }/>
 			<link rel="manifest" href={ fmt.Sprintf("%s/favicon/site.webmanifest", goConstants.StaticFolder) }/>
-			<title>Gen AI Stock Market Analysis</title>
+			<title>Gen AI Stock Market Analyses</title>
 			@loadHtmxAndTailwindScripts.LoadHtmxAndTailwindScripts(goEnv.GlobalEnvVar.ShouldUseCdn)
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		</head>
+
 
 }

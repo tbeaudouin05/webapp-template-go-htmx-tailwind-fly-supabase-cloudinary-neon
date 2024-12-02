@@ -5,9 +5,7 @@ Should install Go: go version go1.23.0 darwin/arm64
 
 Run: go get to install packages in the project
 
-Install nodejs (for Tailwind)
-
-
+Install nodejs & npm (for Tailwind)
 
 Should create new:
 - fly.io project
@@ -24,9 +22,7 @@ Should connect repository to your fly.io project:
 2. Run: fly launch
 3. IMPORTANT: Would you like to copy its configuration to the new app? --> SAY YES!
 
-
 Should update env variables for neon, supabase, cloudinary access
-
 
 Should create file .env at root, find structure of .env in struct EnvVar in file goEnv.go
 Please note that environment variable names should have exact same name in EnvVar as in .env
@@ -35,8 +31,6 @@ Example:
 - ShouldUseCdn should be called as such and not SHOULD_USE_CDN
 
 Generally speaking, we only use camel case everywhere.
-
-
 
 ----
 Create neon project here: https://console.neon.tech/app/projects
@@ -59,39 +53,6 @@ This means that you should create different Passage apps for local vs. non-local
 find your PassageAppId here once you created your passage app: https://console.passage.id/
 
 update PassageAppId in .env file
-
-use this to logout user:
-import (
-  "net/http"
- 
-  "github.com/passageidentity/passage-go"
-)
- 
-func exampleHandler(w http.ResponseWriter, r *http.Request) {
- 
-  psg, _ := passage.New("<PASSAGE_APP_ID>", &passage.Config{
-    APIKey: "<PASSAGE_API_KEY>",
-  })
- 
-  // Get the Passage User ID from database
- 
-  // The passageUserID returned above can be used deactivate a user
-  deactivatedUser, err := psg.DeactivateUser(passageUserID)
-  if err != nil {
-    // Couldn't deactivate the user
-    w.WriteHeader(http.StatusInternalServerError)
-    return
-  }
- 
-  // The passageUserID returned above can be used activate a user
-  activatedUser, err := psg.ActivateUser(passageUserID)
-  if err != nil {
-    // Couldn't activate the user
-    w.WriteHeader(http.StatusInternalServerError)
-    return
-  }
- 
-}
 
 ----
 
