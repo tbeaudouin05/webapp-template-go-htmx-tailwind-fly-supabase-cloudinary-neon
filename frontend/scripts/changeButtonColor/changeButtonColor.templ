@@ -1,0 +1,24 @@
+package changeButtonColor 
+
+script ChangeButtonColor(button templ.JSExpression) {
+  
+        // Remove existing blue classes
+        button.classList.remove(
+            'bg-blue-700',
+            'hover:bg-blue-800',
+            'focus:ring-blue-300',
+            'dark:bg-blue-600',
+            'dark:hover:bg-blue-700',
+            'dark:focus:ring-blue-800'
+        );
+
+        // Add red classes
+        button.classList.add(
+            'bg-red-700',
+            'hover:bg-red-800',
+            'focus:ring-red-300',
+            'dark:bg-red-600',
+            'dark:hover:bg-red-700',
+            'dark:focus:ring-red-800'
+        ); 
+}
