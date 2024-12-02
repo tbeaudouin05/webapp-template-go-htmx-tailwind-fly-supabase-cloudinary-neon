@@ -7,6 +7,15 @@ Run: go get to install packages in the project
 
 Install nodejs & npm (for Tailwind)
 
+---
+
+For creating web components in Go, we use:
+- Templ: https://templ.guide/ (this is a Go package for creating HTML components in Go)
+- HTMX: https://htmx.org/docs/ (this is a lightweight javascript library that extends HTML in order to, among other things, enable to replace only part of the HTML of the page when the server sends back HTML)
+
+
+---
+
 Should create new:
 - fly.io project
 - passage account
