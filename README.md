@@ -97,10 +97,23 @@ func exampleHandler(w http.ResponseWriter, r *http.Request) {
 
 To add tailwind animations, use tailwind.config.js (ask chatgpt how to do this with tailwind.config.js) - animations will only be available if ShouldUseCdn = No
 
+By default, this project is set up to use Tailwind daisyUi which is a pre-built tailwind library for Google material design components - but you can also use plain tailwind or any other tailwind library.
+If you do not want to use daisyUi components, just delete this: require('daisyui'), in tailwind.config.js
+
+If you want to use daisyUi, you should run: npm i -D daisyui@latest to install it.
+
+--
+
 Static files can be served from frontend/static/
 
 To run locally, go to cmd/run and run: go run .
 
 To deploy, go to cmd/deploy and run: go run .
+Note: before deploying, you should set the fly env variables.
+For each variable in .env, you should run: fly secrets set VariableName=VariableValue
+For instance: 
+- fly secrets set Env=development
+- fly secrets set ShouldUseCdn=No
+Same for NeonDatabaseUrl and PassageAppId
 
 

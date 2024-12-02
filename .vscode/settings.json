@@ -1,0 +1,7 @@
+{
+    "tailwindCSS.includeLanguages": {
+        "html": "templ",
+        "templ": "html",
+        "plaintext": "templ"
+    }
+}

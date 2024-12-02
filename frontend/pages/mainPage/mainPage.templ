@@ -3,18 +3,25 @@ package mainPage
 import "webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/headComponent"
 
 templ Hello(name string) {
-	<div>Hello, { name }</div>
+	<div class="text-center text-2xl font-bold text-primary">
+		Hello, { name }
+	</div>
 }
 
 templ Page() {
 	<!DOCTYPE html>
 	<html lang="en">
 		@headComponent.HeadComponent()
-		<body>
-			<div id="content">
+		<body class="bg-base-100 min-h-screen flex flex-col items-center justify-center">
+			<div id="content" class="card w-96 bg-base-200 shadow-md p-4">
 				@Hello("World")
 			</div>
-			<button hx-get="/update" hx-target="#content" hx-swap="innerHTML">
+			<button 
+				hx-get="/update" 
+				hx-target="#content" 
+				hx-swap="innerHTML" 
+				class="btn btn-primary mt-4"
+			>
 				Update Greeting
 			</button>
 		</body>
