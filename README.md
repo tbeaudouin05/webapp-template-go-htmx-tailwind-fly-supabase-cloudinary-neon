@@ -58,10 +58,10 @@ update PassageAppId in .env file
 
 To add tailwind animations, use tailwind.config.js (ask chatgpt how to do this with tailwind.config.js) - animations will only be available if ShouldUseCdn = No
 
-By default, this project is set up to use Tailwind daisyUi which is a pre-built tailwind library for Google material design components - but you can also use plain tailwind or any other tailwind library.
-If you do not want to use daisyUi components, just delete this: require('daisyui'), in tailwind.config.js
+By default, this project is set up to use Tailwind Flowbite which is a tailwind library for pre-built design components - but you can also use plain tailwind or any other tailwind library. Flowbite is the Tailwind plugin with the most comprehensive list of pre-built components (more than 400 components).
+If you do not want to use Flowbite components, just delete this: require('flowbite/plugin'), in tailwind.config.js
 
-If you want to use daisyUi, you should run: npm i -D daisyui@latest to install it.
+If you want to use Flowbite, you should run: npm install flowbite to install it.
 
 --
 
@@ -78,3 +78,6 @@ For instance:
 Same for NeonDatabaseUrl and PassageAppId
 
 
+-- 
+
+example of templ script

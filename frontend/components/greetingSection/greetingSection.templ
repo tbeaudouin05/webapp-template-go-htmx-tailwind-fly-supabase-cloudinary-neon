@@ -1,0 +1,14 @@
+package greetingSection
+
+import (
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/buttons/updateGreetingButton"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/cards/defaultCard"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/helloComponent"
+)
+
+templ GreetingSection(name string) {
+	<div class="flex-grow flex flex-col items-center justify-center">
+		@defaultCard.DefaultCard(helloComponent.Hello("World"))
+		@updateGreetingButton.UpdateGreetingButton()
+	</div>
+}

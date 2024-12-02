@@ -6,6 +6,7 @@ import (
 	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/backend/middlewares/passageAuthMiddleware"
 	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/backend/neonDatabase/getNeonConnection"
 	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/backend/neonDatabase/testNeonDatabase"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/helloComponent"
 	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/pages/mainPage"
 	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/pages/passageAuthPage"
 	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/goConstants"
@@ -58,7 +59,7 @@ func main() {
 	// Unprrotected route: Handle HTMX request to update the greeting
 	r.GET("/update", func(c *gin.Context) {
 		c.Status(200)
-		mainPage.Hello("HTMX").Render(c.Request.Context(), c.Writer)
+		helloComponent.Hello("HTMX").Render(c.Request.Context(), c.Writer)
 	})
 
 	// Protected routes

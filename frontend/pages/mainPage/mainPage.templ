@@ -1,29 +1,23 @@
 package mainPage
 
-import "webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/headComponent"
-
-templ Hello(name string) {
-	<div class="text-center text-2xl font-bold text-primary">
-		Hello, { name }
-	</div>
-}
+import (
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/footerComponent"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/headComponent"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/greetingSection"
+	"webapp-template-go-htmx-tailwind-fly-supabase-cloudinary-neon/frontend/components/megaMenu"
+)
 
 templ Page() {
 	<!DOCTYPE html>
 	<html lang="en">
 		@headComponent.HeadComponent()
-		<body class="bg-base-100 min-h-screen flex flex-col items-center justify-center">
-			<div id="content" class="card w-96 bg-base-200 shadow-md p-4">
-				@Hello("World")
-			</div>
-			<button 
-				hx-get="/update" 
-				hx-target="#content" 
-				hx-swap="innerHTML" 
-				class="btn btn-primary mt-4"
-			>
-				Update Greeting
-			</button>
+		<body class="bg-gray-50 min-h-screen flex flex-col">
+			<!-- Header -->
+			@megaMenu.MegaMenu()
+			<!-- Main Content -->
+			@greetingSection.GreetingSection("World")
+			<!-- Footer -->
+			@footerComponent.Footer()
 		</body>
 	</html>
 }
