@@ -89,4 +89,10 @@ Same for NeonDatabaseUrl and PassageAppId
 
 -- 
 
-example of templ script
+For help to code with flowbite, the flowbite team created a flowbite GPT!
+https://chatgpt.com/g/g-y7yC35HB9-flowbite-gpt
+
+
+--
+
+for "ORM" like feature: sqlc golang
